@@ -4,8 +4,8 @@ USE notetracker_db;
 
 CREATE TABLE notes(
   id INT AUTO_INCREMENT NOT NULL,
-  title VARCHAR(30),
-  text VARCHAR(500),
+  title VARCHAR(30) NOT NULL,
+  text VARCHAR(500) NOT NULL,
   PRIMARY KEY (id)
 );
 
