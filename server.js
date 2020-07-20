@@ -4,12 +4,12 @@ var express = require("express");
 var path = require("path");
 var fs = require("fs");
 const { type } = require("os");
-const ORM = require('./config/orm')
+const Notes = require('./model/notes')
 
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = process.env.PORT || 3500;
+var PORT = process.env.PORT || 127;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -17,16 +17,16 @@ app.use(express.json());
 app.use(express.static('public'))
 app.use(express.static('db'))
 
-app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-  });
+// app.get("/", function(req, res) {
+//     res.sendFile(path.join(__dirname, "public/index.html"));
+//   });
 
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
   });
 
 app.get("/api/notes", function(req, res) {
-  ORM.selectAll('notes')
+  Notes.selectAll(['notes'])
     .then (results => {
       res.json(results)
     })
@@ -35,7 +35,7 @@ app.get("/api/notes", function(req, res) {
 
 app.get("/api/notes/:id", function(req, res) {
   const id = req.params.id
-  ORM.selectOneNote(id)
+  Notes.selectOneNote(id)
     .then (results => {
       res.json(results)
     })
@@ -44,7 +44,7 @@ app.get("/api/notes/:id", function(req, res) {
 });
 app.delete("/api/notes/:id",function(req,res){
   const id = req.params.id
-  ORM.deleteOneNote(id)
+  Notes.deleteOneNote(id)
     .then (results => {
       res.json(results)
     })
@@ -53,7 +53,7 @@ app.delete("/api/notes/:id",function(req,res){
 
 app.post('/api/notes' , function(req,res){
   var newNote = req.body;
-  ORM.createOneNote(newNote.title,newNote.text)
+  Notes.createOneNote(newNote.title,newNote.text)
     .then (results => {
       res.json(results)
     })
