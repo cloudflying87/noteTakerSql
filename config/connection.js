@@ -7,23 +7,23 @@ let port = process.env.DB_PORT
 let user = process.env.DB_USER
 let password = process.env.DB_PASS
 let database = process.env.DB_NAME
+let connection;
 
-
-
-const connection = mysql.createConnection({
-    
-    host: host,
-    port: port,
-    user: user,
-    password: password,
-    database: database,
-    
-    
-});
+if (process.env.JAWSDB_URL) {
+    connection = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
+    connection = mysql.createConnection({
+        host: host,
+        port: port,
+        user: user,
+        password: password,
+        database: database,
+    });
+}
 
 connection.query = util.promisify(connection.query)
 
-connection.connect(function(err) {
+connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
 });
